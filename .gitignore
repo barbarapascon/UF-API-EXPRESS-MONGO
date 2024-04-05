@@ -1,1 +1,10 @@
-/node_modules
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos de ambiente
+.env
+
+# Ignorar arquivos de log
+*.log
+
+# E outras pastas e arquivos que deseja ignorar
