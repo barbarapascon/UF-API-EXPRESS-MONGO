@@ -3,9 +3,19 @@ const express = require("express");
 const UserModel = require("../models/User");
 
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authConfig = require("../config/auth.json");
 
 const router = express.Router();
 
+const generateToken = (user = {})=>{
+    return jwt.sign({
+        id:user.id,
+        name: user.name
+    }, authConfig.secret , {
+        expiresIn: 86400
+    });
+};
 router.post("/register", async (req, res) => {
     const {email} = req.body;
 
@@ -14,21 +24,13 @@ router.post("/register", async (req, res) => {
             error: true,
             message:"User exists",
         });
-        
-        // para indicar qual erro foi
     }
-    const User = await UserModel.create(req.body);
-    User.password = undefined;
+    const user = await UserModel.create(req.body);
+    user.password = undefined;
     
-        //exclui password da visualizacao do json
-        //observacao: aparentemente enquanto se fazia requisicao ela funcionava mas ate esse 
-        //momento aqui em que se usou o model para criar um user seguindo o Schema do mongoose , 
-        //nada era criado no banco 
-        
     return res.json({
-        error:false,
-        message:"Registrado com sucessooooo",
-        data: User
+        user,
+        token: generateToken(user)
     });
 })
 
@@ -53,8 +55,12 @@ router.post("/authenticate", async(req, res) => {
             });
         }
         user.password = undefined;
+      
 
-        return res.json(user);  
+        return res.json({
+            user,
+            token: generateToken(user)
+        });  
     } catch (err) {
         // Handle possible errors, like database connection issues
         console.error(err);
