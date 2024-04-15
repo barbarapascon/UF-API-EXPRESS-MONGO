@@ -9,6 +9,7 @@ const authConfig = require("../config/auth.json");
 const router = express.Router();
 
 router.get("/users",(req, res)=>{
-    return res.json({});
+    console.log('controller');
+    return res.json();
 });
 module.exports = router;
