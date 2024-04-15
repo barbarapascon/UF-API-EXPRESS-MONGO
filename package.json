@@ -15,5 +15,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^6.10.0"
+  },
+  "devDependencies": {
+    "readme-md-generator": "^1.0.0"
   }
 }
